@@ -1,0 +1,35 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+        namespace: dev
+    gateway:
+      discovery:
+        locator:
+           enabled: true
+      routes:
+        - id: route-user
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/**
+        - id: route-content
+          uri: lb://content-service
+          predicates:
+            - Path=/content-service/**
+      globalcors:
+        cors-configurations:
+           '[/**]':
+             allowed-origin-patterns: "*"
+             allowed-headers: "*"
+             allowed-methods: "*"
+             allow-credentials: 'true'
+             max-age: '3600'
+
